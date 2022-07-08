@@ -24,11 +24,17 @@ public class TaskController {
     @GetMapping (value = "/asteroids")
     public JsonNode getAsteroids() throws JsonProcessingException {
         String url= "https://api.nasa.gov/neo/rest/v1/feed?start_date=2022-07-08&end_date=2022-07-12&api_key=DEMO_KEY";
+        /* Obtenemos valor del JSON */
         RestTemplate restTemplate = new RestTemplate();
-        String asteroid = restTemplate.getForObject(url, String.class);
+        String json = restTemplate.getForObject(url, String.class);
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readTree(asteroid);
+        JsonNode JsonNode = mapper.readTree(json);
+        JsonNode asteroide = filtrarJsonNodepornombre(JsonNode);
+        return asteroide;
     }
 
-
+    public JsonNode filtrarJsonNodepornombre(JsonNode jsonNode) {
+        jsonNode = jsonNode.findValue("name");
+        return jsonNode;
+    }
 }
