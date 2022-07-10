@@ -50,12 +50,22 @@ public class AsteroidController {
                     /* Como solo interesa la medida en KM, lo comprobamos
                     y calculamos la media del diametro para añadirla al arrayList */
                     if (neo2.has("kilometers")) {
-                        Float media = calcularmediadiametro(neo2);
+                        JsonNode diametro_km = neo2.path("kilometers");
+                        Float diameter_min = obtenciondedatosatravesdeljson(diametro_km, "estimated_diameter_min");
+                        Float diameter_max = obtenciondedatosatravesdeljson(diametro_km, "estimated_diameter_max");
+                        Float media = (diameter_min + diameter_max) / 2;
                         String media_str = String.valueOf(media);
                         listaasteroides.add(media_str);
                     }
                     /*for (JsonNode neo3 : neo2) {
-                        System.out.println(neo3);
+                        for (JsonNode neo4 : neo3) {
+                            /*System.out.println(neo4);*/
+                           /* if (neo4.has("kilometers_per_hour")) {
+                                Float velocidad = obtenciondedatosatravesdeljson(neo4, "kilometers_per_hour");
+                                String velocidad_str = String.valueOf(velocidad);
+                                listaasteroides.add(velocidad_str);
+                            }
+                        }
                     }*/
                 }
             }
@@ -77,17 +87,11 @@ public class AsteroidController {
         JsonNode asteroides = mapper.createObjectNode().set("asteroides", neoNode);
         return asteroides;
     }
-
-    /* Función personalizada para calcular la media del diametro de un asteroide
-    * en base a los datos proporcionados por la API externa */
-    public Float calcularmediadiametro(JsonNode neo2) {
-        JsonNode diametro_km = neo2.path("kilometers");
-        String diametro_min_str = diametro_km.path("estimated_diameter_min").toString();
-        Float diametro_min_num = Float.valueOf(diametro_min_str).floatValue();
-        String diametro_max_str = diametro_km.path("estimated_diameter_max").toString();
-        Float diametro_max_num = Float.valueOf(diametro_max_str).floatValue();
-        Float media = (diametro_min_num + diametro_max_num) / 2;
-        return media;
+    /* Funcion para obtener los datos solicitados del json dispuesto */
+    public Float obtenciondedatosatravesdeljson(JsonNode neo, String palabra_clave) {
+        String resultado = neo.path(palabra_clave).toString();
+        Float resultado_num = Float.valueOf(resultado).floatValue();
+        return resultado_num;
     }
 }
 
