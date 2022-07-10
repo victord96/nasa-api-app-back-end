@@ -51,22 +51,31 @@ public class AsteroidController {
                     y calculamos la media del diametro para añadirla al arrayList */
                     if (neo2.has("kilometers")) {
                         JsonNode diametro_km = neo2.path("kilometers");
-                        Float diameter_min = obtenciondedatosatravesdeljson(diametro_km, "estimated_diameter_min");
-                        Float diameter_max = obtenciondedatosatravesdeljson(diametro_km, "estimated_diameter_max");
+                        Float diameter_min = obtenciondefloatatravesdejson(diametro_km, "estimated_diameter_min");
+                        Float diameter_max = obtenciondefloatatravesdejson(diametro_km, "estimated_diameter_max");
                         Float media = (diameter_min + diameter_max) / 2;
                         String media_str = String.valueOf(media);
                         listaasteroides.add(media_str);
                     }
-                    /*for (JsonNode neo3 : neo2) {
+                    for (JsonNode neo3 : neo2) {
+                        /* Añadimos al Arraylist los datos contenidos en el jsonnode con valor de fecha */
+                        if (neo3.has("close_approach_date")) {
+                            String fecha = obtenciondestratravesdejson(neo3, "close_approach_date");
+                            listaasteroides.add(fecha);
+                        }
+                        /* Añadimos al Arraylist los datos contenidos en el jsonnode con valor de planeta */
+                        if (neo3.has("orbiting_body")) {
+                            String planeta = obtenciondestratravesdejson(neo3, "orbiting_body");
+                            listaasteroides.add(planeta);
+                        }
                         for (JsonNode neo4 : neo3) {
-                            /*System.out.println(neo4);*/
-                           /* if (neo4.has("kilometers_per_hour")) {
-                                Float velocidad = obtenciondedatosatravesdeljson(neo4, "kilometers_per_hour");
-                                String velocidad_str = String.valueOf(velocidad);
-                                listaasteroides.add(velocidad_str);
+                            /* Añadimos al Arraylist los datos contenidos en el jsonnode con valor de velocidad */
+                            if (neo4.has("kilometers_per_hour")) {
+                                String velocidad = obtenciondestratravesdejson(neo4, "kilometers_per_hour");
+                                listaasteroides.add(velocidad);
                             }
                         }
-                    }*/
+                    }
                 }
             }
         }
@@ -87,11 +96,16 @@ public class AsteroidController {
         JsonNode asteroides = mapper.createObjectNode().set("asteroides", neoNode);
         return asteroides;
     }
+    /* Funcion para obtener los numeros solicitados del json dispuesto */
+    public Float obtenciondefloatatravesdejson(JsonNode neo, String campo_clave) {
+        Float resultado = neo.path(campo_clave).floatValue();
+        return resultado;
+    }
+
     /* Funcion para obtener los datos solicitados del json dispuesto */
-    public Float obtenciondedatosatravesdeljson(JsonNode neo, String palabra_clave) {
-        String resultado = neo.path(palabra_clave).toString();
-        Float resultado_num = Float.valueOf(resultado).floatValue();
-        return resultado_num;
+    public String obtenciondestratravesdejson(JsonNode neo, String campo_clave) {
+        String resultado = neo.path(campo_clave).toString();
+        return resultado;
     }
 }
 
