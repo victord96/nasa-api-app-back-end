@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 
+import java.util.Date;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "close_approach_date",
@@ -21,7 +23,7 @@ import lombok.Data;
 public class CloseApproachDatum {
 
     @JsonProperty("close_approach_date")
-    public String closeApproachDate;
+    public Date closeApproachDate;
     @JsonProperty("close_approach_date_full")
     public String closeApproachDateFull;
     @JsonProperty("epoch_date_close_approach")
